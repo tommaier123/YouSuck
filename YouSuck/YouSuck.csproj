@@ -10,6 +10,20 @@
 	  <UseWindowsForms>True</UseWindowsForms>
   </PropertyGroup>
 
+  <ItemGroup>
+    <None Remove="Assets\install.bat" />
+    <None Remove="Assets\uninstall.bat" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Assets\install.bat">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\uninstall.bat">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
 	<ItemGroup>
 		<Resource Include="Assets\Harlow-Solid-Italic.ttf" />
 		<Resource Include="Assets\yousuck_color.ico" />
