@@ -1,4 +1,5 @@
 # Do you suck? 
+![What a nice logo!](/YouSuck/Assets/yousuck_color.svg)
 ### I do, for wasting my time on social media.
 Originally this program was intended to limit my use of YouTube (the name is actually a very funny pun, you see).
 
