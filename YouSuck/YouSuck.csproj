@@ -2,8 +2,11 @@
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
-    <UseWPF>true</UseWPF>
+    <TargetFramework>net6.0-windows</TargetFramework>
+	  <SatelliteResourceLanguages>en</SatelliteResourceLanguages>
+	  <IncludeAllContentForSelfExtract>true</IncludeAllContentForSelfExtract>
+	  <DebugType>embedded</DebugType>
+	  <UseWPF>True</UseWPF>
   </PropertyGroup>
 
 </Project>
