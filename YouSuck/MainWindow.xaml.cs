@@ -23,16 +23,13 @@ namespace YouSuck
 {
     public partial class MainWindow : Window
     {
-        private const int WH_KEYBOARD_LL = 13;
-        private const int WM_KEYDOWN = 0x0100;
-        private static LowLevelKeyboardProc _proc = HookCallback;
-        private static IntPtr _hookID = IntPtr.Zero;
+        private static List<string> browsersList = new List<string> { "chrome", "firefox", "iexplore", "safari", "opera", "edge" };
+        private static List<string> siteList = new List<string> { "youtube", "bilibili", "vimeo", "twitch", "netflix", "prime video", "disney+", "hbo max", "hulu", "sky", "crunchyroll", "funimation", "jellyfin", "twitter", "reddit", "facebook", "instagram", "tiktok", "line", "telegram", "discord", "tumblr", "whatsapp", "amazon", "ebay", "pinterest", "xvideos", "pornhub", "xnxx", "xhamster" };
+
+
 
         private static Timer timer1;
         private static float seconds = 0;
-        private static List<string> browsersList = new List<string> { "chrome", "firefox", "iexplore", "safari", "opera", "edge" };
-        private static int lastKey = 0;
-
         private System.Windows.Forms.NotifyIcon m_notifyIcon;
 
 
@@ -66,7 +63,7 @@ namespace YouSuck
             string answer = "";
             bool kill = t.Hours >= 1 || t.Minutes >= 30;//kill after 30 minutes
 
-            if (IsYoutubeOpen(kill)) seconds++;
+            if (CheckAll(kill)) seconds++;
 
             if (t.Hours > 0) answer += t.Hours + " Hour" + (t.Hours != 1 ? "s" : "") + " and ";
             if (t.Minutes > 0) answer += t.Minutes + " Minute" + (t.Minutes != 1 ? "s" : "") + " and ";
@@ -81,20 +78,20 @@ namespace YouSuck
             });
         }
 
-        public bool IsYoutubeOpen(bool kill = false)
+        public bool CheckAll(bool kill = false)
         {
             bool ret = false;
-            foreach (var singleBrowser in browsersList)
+            foreach (var browser in browsersList)
             {
-                if (IsYoutubeInBrowser(singleBrowser, kill)) ret = true;
+                if (CheckBrowser(browser, kill)) ret = true;
             }
             return ret;
         }
 
-        public bool IsYoutubeInBrowser(string singleBrowser, bool kill = false)
+        public bool CheckBrowser(string browser, bool kill = false)
         {
             bool ret = false;
-            var process = Process.GetProcessesByName(singleBrowser);
+            var process = Process.GetProcessesByName(browser);
             if (process.Length > 0)
             {
                 foreach (Process singleProcess in process)
@@ -104,7 +101,7 @@ namespace YouSuck
 
                     StringBuilder text = new StringBuilder(length + 1);
                     GetWindowText(hWnd, text, text.Capacity);
-                    if (text.ToString().Contains("YouTube") || text.ToString().Contains("Twitch") || text.ToString().Contains("Crunchyroll") || text.ToString().Contains("Funimation") || text.ToString().Contains("Netflix"))
+                    if (CheckSite(text.ToString()))
                     {
                         ret = true;
                         if (kill) singleProcess.CloseMainWindow();
@@ -114,30 +111,13 @@ namespace YouSuck
             return ret;
         }
 
-        private static IntPtr SetHook(LowLevelKeyboardProc proc)
+        public bool CheckSite(string text)
         {
-            using (Process curProcess = Process.GetCurrentProcess())
-            using (ProcessModule curModule = curProcess.MainModule)
+            foreach (string site in siteList)
             {
-                return SetWindowsHookEx(WH_KEYBOARD_LL, proc,
-                    GetModuleHandle(curModule.ModuleName), 0);
+                if (text.ToLower().Contains(site)) return true;
             }
-        }
-
-        private delegate IntPtr LowLevelKeyboardProc(int nCode, IntPtr wParam, IntPtr lParam);
-
-        private static IntPtr HookCallback(int nCode, IntPtr wParam, IntPtr lParam)
-        {
-            if (nCode >= 0 && wParam == (IntPtr)WM_KEYDOWN)
-            {
-                int vkCode = Marshal.ReadInt32(lParam);
-                if (vkCode != lastKey)
-                {
-                    lastKey = vkCode;
-                    seconds -= 0.3f;//add 0.3 seconds per keystroke
-                }
-            }
-            return CallNextHookEx(_hookID, nCode, wParam, lParam);
+            return false;
         }
 
         private void OnClosing(object sender, CancelEventArgs e)
@@ -195,6 +175,39 @@ namespace YouSuck
         {
             if (m_notifyIcon != null)
                 m_notifyIcon.Visible = show;
+        }
+
+        private delegate IntPtr LowLevelKeyboardProc(int nCode, IntPtr wParam, IntPtr lParam);
+
+        private const int WH_KEYBOARD_LL = 13;
+        private const int WM_KEYDOWN = 0x0100;
+        private static LowLevelKeyboardProc _proc = HookCallback;
+        private static IntPtr _hookID = IntPtr.Zero;
+
+        private static IntPtr SetHook(LowLevelKeyboardProc proc)
+        {
+            using (Process curProcess = Process.GetCurrentProcess())
+            using (ProcessModule curModule = curProcess.MainModule)
+            {
+                return SetWindowsHookEx(WH_KEYBOARD_LL, proc,
+                    GetModuleHandle(curModule.ModuleName), 0);
+            }
+        }
+
+        private static int lastKey = 0;
+
+        private static IntPtr HookCallback(int nCode, IntPtr wParam, IntPtr lParam)
+        {
+            if (nCode >= 0 && wParam == (IntPtr)WM_KEYDOWN)
+            {
+                int vkCode = Marshal.ReadInt32(lParam);
+                if (vkCode != lastKey)
+                {
+                    lastKey = vkCode;
+                    seconds -= 0.3f;//add 0.3 seconds per keystroke
+                }
+            }
+            return CallNextHookEx(_hookID, nCode, wParam, lParam);
         }
 
         [DllImport("user32.dll")]
