@@ -1,12 +1,19 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
 
   <PropertyGroup>
-    <OutputType>WinExe</OutputType>
+    <OutputType>Exe</OutputType>
     <TargetFramework>net6.0-windows</TargetFramework>
 	  <SatelliteResourceLanguages>en</SatelliteResourceLanguages>
 	  <IncludeAllContentForSelfExtract>true</IncludeAllContentForSelfExtract>
 	  <DebugType>embedded</DebugType>
 	  <UseWPF>True</UseWPF>
+	  <UseWindowsForms>True</UseWindowsForms>
+	  <ApplicationIcon>Assets\yousuck_icon.ico</ApplicationIcon>
   </PropertyGroup>
+
+	<ItemGroup>
+		<Resource Include="Assets\yousuck_icon.ico" />
+		<Resource Include="Assets\Harlow-Solid-Italic.ttf" />
+	</ItemGroup>
 
 </Project>

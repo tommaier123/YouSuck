@@ -33,10 +33,24 @@ namespace YouSuck
         private static List<string> browsersList = new List<string> { "chrome", "firefox", "iexplore", "safari", "opera", "edge" };
         private static int lastKey = 0;
 
+        private System.Windows.Forms.NotifyIcon m_notifyIcon;
+
 
         public MainWindow()
         {
             InitializeComponent();
+
+            m_notifyIcon = new System.Windows.Forms.NotifyIcon();
+            m_notifyIcon.BalloonTipText = "YouSuck has been minimised. Click the tray icon to show.";
+            m_notifyIcon.BalloonTipTitle = "YouSuck";
+            m_notifyIcon.Text = "YouSuck";
+            Stream iconStream = Application.GetResourceStream(new Uri("pack://application:,,,/YouSuck;component/Assets/yousuck_icon.ico")).Stream;
+            m_notifyIcon.Icon = new System.Drawing.Icon(iconStream);
+            m_notifyIcon.Click += new EventHandler(m_notifyIcon_Click);
+
+            //start minimized
+            Hide();
+            CheckTrayIcon();
 
             _hookID = SetHook(_proc);
 
@@ -50,7 +64,7 @@ namespace YouSuck
         {
             TimeSpan t = TimeSpan.FromSeconds(seconds);
             string answer = "";
-            bool kill = t.Hours >= 1 || t.Minutes >= 30;
+            bool kill = t.Hours >= 1 || t.Minutes >= 30;//kill after 30 minutes
 
             if (IsYoutubeOpen(kill)) seconds++;
 
@@ -120,7 +134,7 @@ namespace YouSuck
                 if (vkCode != lastKey)
                 {
                     lastKey = vkCode;
-                    seconds -= 0.3f;
+                    seconds -= 0.3f;//add 0.3 seconds per keystroke
                 }
             }
             return CallNextHookEx(_hookID, nCode, wParam, lParam);
@@ -145,7 +159,42 @@ namespace YouSuck
             else
             {
                 UnhookWindowsHookEx(_hookID);
+                m_notifyIcon.Dispose();
+                m_notifyIcon = null;
             }
+        }
+
+        private WindowState m_storedWindowState = WindowState.Normal;
+        void OnStateChanged(object sender, EventArgs args)
+        {
+            if (WindowState == WindowState.Minimized)
+            {
+                Hide();
+                //if (m_notifyIcon != null)
+                //    m_notifyIcon.ShowBalloonTip(2000);
+            }
+            else
+                m_storedWindowState = WindowState;
+        }
+        void OnIsVisibleChanged(object sender, DependencyPropertyChangedEventArgs args)
+        {
+            CheckTrayIcon();
+        }
+
+        void m_notifyIcon_Click(object sender, EventArgs e)
+        {
+            Show();
+            WindowState = m_storedWindowState;
+        }
+        void CheckTrayIcon()
+        {
+            ShowTrayIcon(!IsVisible);
+        }
+
+        void ShowTrayIcon(bool show)
+        {
+            if (m_notifyIcon != null)
+                m_notifyIcon.Visible = show;
         }
 
         [DllImport("user32.dll")]
