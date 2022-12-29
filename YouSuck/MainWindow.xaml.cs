@@ -44,7 +44,7 @@ namespace YouSuck
             m_notifyIcon.BalloonTipText = "YouSuck has been minimised. Click the tray icon to show.";
             m_notifyIcon.BalloonTipTitle = "YouSuck";
             m_notifyIcon.Text = "YouSuck";
-            Stream iconStream = Application.GetResourceStream(new Uri("pack://application:,,,/YouSuck;component/Assets/yousuck_icon.ico")).Stream;
+            Stream iconStream = Application.GetResourceStream(new Uri("pack://application:,,,/YouSuck;component/Assets/yousuck_white.ico")).Stream;
             m_notifyIcon.Icon = new System.Drawing.Icon(iconStream);
             m_notifyIcon.Click += new EventHandler(m_notifyIcon_Click);
 

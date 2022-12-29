@@ -4,11 +4,11 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
-        FontFamily="/Assets/#Harlow Solid Italic"
+        FontFamily="pack://application:,,,/YouSuck;component/Assets/#Harlow Solid Italic"
         Closing="OnClosing"
         StateChanged="OnStateChanged" 
         IsVisibleChanged="OnIsVisibleChanged"
-        Icon="/Assets/yousuck_icon.ico"
+        Icon="pack://application:,,,/YouSuck;component/Assets/yousuck_color.ico"
         Title="YouSuck!" Height="450" Width="800">
     <Grid>
         <TextBlock x:Name="Time" HorizontalAlignment="Center" Text="0 Seconds" TextWrapping="Wrap" VerticalAlignment="Center" FontSize="36"/>
