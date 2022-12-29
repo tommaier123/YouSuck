@@ -122,7 +122,7 @@ namespace YouSuck
 
         private void OnClosing(object sender, CancelEventArgs e)
         {
-            int num = 5;//(int)MathF.Max(0, seconds) / 100 + 1;
+            int num = (int)MathF.Max(0, seconds) / 100 + 1;
             for (int i = 0; i < num; i++)
             {
                 MessageBoxResult result = MessageBox.Show((num - i)+"x Do you really want to close it? Are you sure?", "Warning", MessageBoxButton.OKCancel, MessageBoxImage.Exclamation, MessageBoxResult.Cancel);
