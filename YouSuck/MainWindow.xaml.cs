@@ -122,26 +122,20 @@ namespace YouSuck
 
         private void OnClosing(object sender, CancelEventArgs e)
         {
-            int oks = 0;
-            int num = (int)MathF.Max(0, seconds) / 100 + 1;
+            int num = 5;//(int)MathF.Max(0, seconds) / 100 + 1;
             for (int i = 0; i < num; i++)
             {
-                MessageBoxResult result = MessageBox.Show("Do you really want to close it? Are you sure?", "Warning", MessageBoxButton.OKCancel, MessageBoxImage.Exclamation, MessageBoxResult.Cancel);
-                if (result == MessageBoxResult.OK)
+                MessageBoxResult result = MessageBox.Show((num - i)+"x Do you really want to close it? Are you sure?", "Warning", MessageBoxButton.OKCancel, MessageBoxImage.Exclamation, MessageBoxResult.Cancel);
+                if (result != MessageBoxResult.OK)
                 {
-                    oks++;
+                    e.Cancel = true;
+                    return;
                 }
             }
-            if (oks < num)
-            {
-                e.Cancel = true;
-            }
-            else
-            {
-                UnhookWindowsHookEx(_hookID);
-                m_notifyIcon.Dispose();
-                m_notifyIcon = null;
-            }
+
+            UnhookWindowsHookEx(_hookID);
+            m_notifyIcon.Dispose();
+            m_notifyIcon = null;
         }
 
         private WindowState m_storedWindowState = WindowState.Normal;
