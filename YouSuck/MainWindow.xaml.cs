@@ -24,7 +24,7 @@ namespace YouSuck
     public partial class MainWindow : Window
     {
         private static List<string> browsersList = new List<string> { "chrome", "firefox", "iexplore", "safari", "opera", "edge" };
-        private static List<string> siteList = new List<string> { "youtube", "bilibili", "vimeo", "twitch", "netflix", "prime video", "disney+", "hbo max", "hulu", "sky", "crunchyroll", "funimation", "jellyfin", "twitter", "reddit", "facebook", "instagram", "tiktok", "line", "telegram", "discord", "tumblr", "whatsapp", "amazon", "ebay", "pinterest", "xvideos", "pornhub", "xnxx", "xhamster" };
+        private static List<string> siteList = new List<string> { "youtube", "bilibili", "vimeo", "twitch", "netflix", "prime video", "disney+", "hbo max", "hulu", "sky |", "crunchyroll", "funimation", "jellyfin", "twitter", "reddit", "facebook", "instagram", "tiktok", "line|", "telegram", "discord", "tumblr", "whatsapp", "amazon", "ebay", "pinterest", "xvideos", "pornhub", "xnxx", "xhamster" };
 
 
 
@@ -125,7 +125,7 @@ namespace YouSuck
             int num = (int)MathF.Max(0, seconds) / 100 + 1;
             for (int i = 0; i < num; i++)
             {
-                MessageBoxResult result = MessageBox.Show((num - i)+"x Do you really want to close it? Are you sure?", "Warning", MessageBoxButton.OKCancel, MessageBoxImage.Exclamation, MessageBoxResult.Cancel);
+                MessageBoxResult result = MessageBox.Show((num - i) + "x Do you really want to close it? Are you sure?", "Warning", MessageBoxButton.OKCancel, MessageBoxImage.Exclamation, MessageBoxResult.Cancel);
                 if (result != MessageBoxResult.OK)
                 {
                     e.Cancel = true;
