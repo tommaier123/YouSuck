@@ -3,21 +3,12 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
-using System.Threading.Tasks;
 using System.Timers;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
 using System.Windows.Shapes;
-using System.Windows.Threading;
 
 namespace YouSuck
 {
@@ -60,18 +51,27 @@ namespace YouSuck
         private void timer1_Tick(object sender, EventArgs e)
         {
             TimeSpan t = TimeSpan.FromSeconds(seconds);
-            string answer = "";
+            string text = "";
             bool kill = t.Hours >= 1 || t.Minutes >= 30;//kill after 30 minutes
 
             if (CheckAll(kill)) seconds++;
 
-            if (t.Hours > 0) answer += t.Hours + " Hour" + (t.Hours != 1 ? "s" : "") + " and ";
-            if (t.Minutes > 0) answer += t.Minutes + " Minute" + (t.Minutes != 1 ? "s" : "") + " and ";
-            answer += t.Seconds + " Second" + (t.Seconds != 1 ? "s" : "");
+            string notify_text = "";
+
+            if (t.Hours > 0)
+            {
+                text += t.Hours + " Hour" + (t.Hours != 1 ? "s" : "") + " and ";
+                notify_text += t.Hours + ":";
+            }
+            if (t.Minutes > 0) text += t.Minutes + " Minute" + (t.Minutes != 1 ? "s" : "") + " and ";
+            text += t.Seconds + " Second" + (t.Seconds != 1 ? "s" : "");
+
+            notify_text += t.ToString("mm\\:ss");
+            m_notifyIcon.Text = "YouSuck " + notify_text;
 
             Time.Dispatcher.BeginInvoke(() =>
             {
-                Time.Text = answer;
+                Time.Text = text;
                 if (kill) Time.Foreground = new SolidColorBrush(Colors.Red);
                 else if (seconds <= 0) Time.Foreground = new SolidColorBrush(Colors.Green);
                 else Time.Foreground = new SolidColorBrush(Colors.Black);
